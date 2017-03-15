@@ -10,6 +10,7 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.fcrepo.server.security.jaas.util.Base64;
@@ -18,6 +19,25 @@ import org.slf4j.LoggerFactory;
 
 public class AuthFilterJAAS extends UpstreamAuthFilterJAAS {
     protected static final Logger logger = LoggerFactory.getLogger(AuthFilterJAAS.class);
+    protected static final String DEFAULT_KEY = "User-Agent";
+
+    protected String keyHeader = DEFAULT_KEY;
+
+    @Override
+    public void init() throws ServletException {
+        // TODO Auto-generated method stub
+        super.init();
+
+        String configuredKey = filterConfig.getInitParameter("keyHeader");
+        if (configuredKey != null) {
+            keyHeader = configuredKey;
+        }
+        logger.info(String.format("Using HTTP header \"%s\" to key connections.", keyHeader));
+    }
+
+    public void setKeyHeader(String header) {
+        filterConfigBean.addInitParameter("keyHeader", header);
+    }
 
     /**
      * Performs the authentication. Once a Subject is obtained, it is stored in
@@ -32,18 +52,21 @@ public class AuthFilterJAAS extends UpstreamAuthFilterJAAS {
     protected Subject authenticate(HttpServletRequest req) {
         String authorization = req.getHeader("authorization");
         if (authorization == null || authorization.trim().isEmpty()) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Request without \"authorization\" header.");
+            }
             return null;
         }
 
-        String user_agent = req.getHeader("User-Agent");
-        if (user_agent == null || user_agent.trim().isEmpty()) {
-            return null;
+        String key = req.getHeader(keyHeader);
+        if (key != null) {
+            key = key.trim();
         }
-        else {
-            user_agent = user_agent.trim();
+        else if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Request received without \"%s\" header.", keyHeader));
         }
 
-        String token = String.format("%s/%s", user_agent, authorization);
+        String token = String.format("%s/%s", key, authorization);
 
         String auth = null;
         try {
@@ -63,17 +86,17 @@ public class AuthFilterJAAS extends UpstreamAuthFilterJAAS {
         Subject subject = (Subject) req.getSession().getAttribute(token);
         if (subject != null) {
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Got %s's subject from session for %s.", username, user_agent));
+                logger.debug(String.format("Got %s's subject from session for key %s.", username, key));
             }
             return subject;
         }
         else if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Authenticating %s against %s.", username, user_agent));
+            logger.debug(String.format("Authenticating %s against key %s.", username, key));
         }
 
         LoginContext loginContext = null;
         try {
-            CallbackHandler handler = new CallbackHandlerImpl(username, password, user_agent);
+            CallbackHandler handler = new CallbackHandlerImpl(username, password, key);
             loginContext = new LoginContext(jaasConfigName, handler);
             loginContext.login();
         }
@@ -85,7 +108,7 @@ public class AuthFilterJAAS extends UpstreamAuthFilterJAAS {
         // successfully logged in
         subject = loginContext.getSubject();
 
-        // object accessible only by base64 encoded user_agent/username:password
+        // object accessible only by base64 encoded key/username:password
         // that was
         // initially used - prevents some dodgy stuff
         req.getSession().setAttribute(token, subject);

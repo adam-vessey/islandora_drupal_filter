@@ -108,7 +108,6 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
         // anonymous role.
         if ("anonymous".equals(userid) && "anonymous".equals(password)) {
             createAnonymousUser();
-
             return;
         }
 
@@ -157,6 +156,9 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
                     hasMoreRecords = rs.next();
                 }
                 conn.close();
+            }
+            else if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Failed to connect to DB for %s.", agent));
             }
         }
         catch (SQLException ex) {

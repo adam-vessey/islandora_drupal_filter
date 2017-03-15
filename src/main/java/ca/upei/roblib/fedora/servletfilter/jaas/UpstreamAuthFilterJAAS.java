@@ -78,7 +78,7 @@ import org.slf4j.LoggerFactory;
  * @author nish.naidoo@gmail.com
  */
 public class UpstreamAuthFilterJAAS
-implements Filter {
+        implements Filter {
 
     protected static final Logger logger = LoggerFactory
             .getLogger(UpstreamAuthFilterJAAS.class);
@@ -239,9 +239,9 @@ implements Filter {
      */
     @Override
     public void doFilter(ServletRequest request,
-            ServletResponse response,
-            FilterChain chain) throws IOException,
-    ServletException {
+                         ServletResponse response,
+                         FilterChain chain) throws IOException,
+            ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
@@ -268,23 +268,23 @@ implements Filter {
                 boolean isObjectXML = requestPath.endsWith("/objectXML");
                 boolean isGetDatastream =
                         requestPath.contains("/datastreams/")
-                        && !requestPath.endsWith("/content");
+                                && !requestPath.endsWith("/content");
                 isGetDatastream = isGetDatastream || (requestPath.endsWith("/datastreams")
-                        && Boolean.valueOf(request.getParameter("profiles")));
+                                && Boolean.valueOf(request.getParameter("profiles")));
                 boolean isGetRelationships =
                         requestPath.endsWith("/relationships");
                 boolean isValidate = requestPath.endsWith("/validate");
                 // management get methods (LITE API, control)
                 boolean isManagement =
                         fullPath.endsWith("/management/control")
-                        || fullPath.endsWith("/management/getNextPID");
+                                || fullPath.endsWith("/management/getNextPID");
                 // user servlet
                 boolean isUserServlet = fullPath.endsWith("/user");
                 // challenge if API-M or one of the above other services (otherwise we assume it is API-A)
                 doChallenge =
                         isExport || isObjectXML || isGetDatastream
-                        || isGetRelationships || isValidate
-                        || isManagement || isUserServlet;
+                                || isGetRelationships || isValidate
+                                || isManagement || isUserServlet;
             }
         }
 
@@ -349,7 +349,7 @@ implements Filter {
     protected void loginForm(HttpServletResponse response) throws IOException {
         response.reset();
         response.addHeader("WWW-Authenticate",
-                "Basic realm=\"!!Fedora Repository Server\"");
+                           "Basic realm=\"!!Fedora Repository Server\"");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         OutputStream out = response.getOutputStream();
         out.write("Fedora: 401 ".getBytes());
@@ -456,8 +456,8 @@ implements Filter {
 
         if (logger.isDebugEnabled()) {
             logger.debug("found userPrincipal [{}]: {}",
-                    userPrincipal.getClass().getName(),
-                    userPrincipal.getName());
+                         userPrincipal.getClass().getName(),
+                         userPrincipal.getName());
         }
 
         return userPrincipal;
@@ -548,8 +548,8 @@ implements Filter {
      *        the request in which to place the attributes.
      */
     protected void populateFedoraAttributes(Subject subject,
-            Set<String> userRoles,
-            HttpServletRequest request) {
+                                          Set<String> userRoles,
+                                          HttpServletRequest request) {
         Map<String, Set<String>> attributes =
                 SubjectUtils.getAttributes(subject);
 
