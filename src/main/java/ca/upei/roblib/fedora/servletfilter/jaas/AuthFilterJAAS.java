@@ -91,7 +91,7 @@ public class AuthFilterJAAS extends UpstreamAuthFilterJAAS {
             return subject;
         }
         else if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Authenticating %s against key %s.", username, key));
+            logger.debug(String.format("Authenticating %s (%s).", username, key));
         }
 
         LoginContext loginContext = null;
@@ -116,15 +116,15 @@ public class AuthFilterJAAS extends UpstreamAuthFilterJAAS {
         return subject;
     }
 
-    protected static class CallbackHandlerImpl implements CallbackHandler {
+    protected class CallbackHandlerImpl implements CallbackHandler {
         protected String username;
         protected String password;
-        protected String userAgent;
+        protected String key;
 
-        public CallbackHandlerImpl(String username, String password, String agent) {
+        public CallbackHandlerImpl(String username, String password, String key) {
             this.username = username;
             this.password = password;
-            this.userAgent = agent;
+            this.key = key;
         }
 
         @Override
@@ -137,7 +137,13 @@ public class AuthFilterJAAS extends UpstreamAuthFilterJAAS {
                 }
                 else if (c instanceof KeyChoiceCallback) {
                     KeyChoiceCallback kcc = (KeyChoiceCallback)c;
-                    kcc.setSelectedIndex(kcc.lookupKey(userAgent));
+                    try {
+                        int idx = kcc.lookupKey(key);
+                        kcc.setSelectedIndex(idx);
+                    }
+                    catch (IllegalArgumentException e) {
+                        throw new MissingCredsException(kcc);
+                    }
                 }
                 else {
                     throw new UnsupportedCallbackException(c);
