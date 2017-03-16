@@ -17,6 +17,7 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.login.CredentialNotFoundException;
 import javax.security.auth.login.LoginException;
 
 import org.dom4j.Document;
@@ -25,6 +26,7 @@ import org.dom4j.Element;
 import org.fcrepo.common.Constants;
 
 import ca.upei.roblib.fedora.servletfilter.jaas.KeyChoiceCallback;
+import ca.upei.roblib.fedora.servletfilter.jaas.MissingCredsException;
 
 public class DrupalMultisiteAuthModule extends DrupalAuthModule {
     protected Map<String, Map<String, String>> config;
@@ -47,9 +49,8 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
 
     @Override
     public boolean login() throws LoginException {
-
         if (debug) {
-            logger.debug("DrupalMultisiteAuthModule login called.");
+            logger.debug(String.format("%s login called.", DrupalMultisiteAuthModule.class.getName()));
             for (String key : sharedState.keySet()) {
                 String value = sharedState.get(key).toString();
                 logger.debug(key + ": " + value);
@@ -82,6 +83,10 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
             ioe.printStackTrace();
             throw new LoginException("IOException occured: " + ioe.getMessage());
         }
+        catch (MissingCredsException mce) {
+            throw new CredentialNotFoundException(
+                    String.format("Missing \"key\", required for module %s.", this.getClass().getName()));
+        }
         catch (UnsupportedCallbackException ucbe) {
             throw new LoginException("UnsupportedCallbackException: " + ucbe.getMessage());
         }
@@ -101,7 +106,9 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
      * @param password
      */
     protected void findUser(String userid, String password, String agent) {
-        logger.info("login module findUser");
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Attempting to find %s against %s", userid, agent));
+        }
         setAgentsSet(agent);
 
         // If the user is anonymous don't check the database just give the
@@ -134,7 +141,7 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
                     if (numericId == 0) {
                         // Add the role anonymous in case user in drupal is not
                         // associated with any Drupal roles.
-                        attributeValues.add(DrupalAuthModule.ANONYMOUSROLE);
+                        attributeValues.add(DrupalMultisiteAuthModule.ANONYMOUSROLE);
                         // XXX: Maintain old "anonymous" role, in case it it is
                         // actually being used.
                         attributeValues.add("anonymous");
@@ -150,7 +157,8 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
                 while (hasMoreRecords) {
                     String role = rs.getString("role");
                     if (role != null) {
-                        logger.debug("DrupalAuthModule Added role: " + role);
+                        logger.debug(
+                                String.format("%s, added role: %s", DrupalMultisiteAuthModule.class.getName(), role));
                         attributeValues.add(role);
                     }
                     hasMoreRecords = rs.next();
