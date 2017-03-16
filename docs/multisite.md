@@ -87,6 +87,6 @@ In the above (shortened) example, the key would be "test_key".
 
 There's no precise mechanism prescribed to set the header. Assuming the default `User-Agent` header is being manipulated, something like [`islandora_repository_connection_config`](https://github.com/discoverygarden/islandora_repository_connection_config) might be used on each site, or a custom implementation of the underlying `hook_islandora_repository_connection_construction_alter()`.
 
-While the ability to extract the key from other headers has been allowed in the LoginModule, the exact mechnism which might be use to inject arbitrary headers has not been examined in any great amount.
+While the ability to extract the key from other headers has been allowed in the LoginModule, the exact mechanism which might be use to inject arbitrary headers has not been examined in any great amount.
 
 In any case, the header passed needs to match those configured in the [Connection configuration](#connection-configuration) above, in our case "test_key".
