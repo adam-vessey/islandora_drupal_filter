@@ -8,6 +8,7 @@ There are a number of moving parts:
 * Header configuration from clients
 
 A few definitions, just for ease of discussion:
+
 | Name | Example | Description |
 | ---- | ------- | ----------- |
 | `$FEDORA_HOME` | `/usr/local/fedora` | Path to the Fedora installation. |
