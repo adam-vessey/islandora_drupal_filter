@@ -43,7 +43,7 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
         @SuppressWarnings("unchecked")
         List<Element> list = doc.selectNodes("//FilterDrupal_Connection/connection[@key]");
         for (Element el : list) {
-            config.put(el.attributeValue("key"), parseConnectionElement(el));
+            config.put(el.attributeValue("key").trim(), parseConnectionElement(el));
         }
     }
 
