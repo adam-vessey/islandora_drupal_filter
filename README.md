@@ -41,3 +41,5 @@ Multisite Optimization
 The original `DrupalAuthModule` implementation requires iterating through all configured connection when authenticating users, and for repositories connected to many sites, this iteration can be slow (and unavailable sites may even result in timeouts); therefore, it is desirable if it was possible to more directly select which against which to attempt authentication.
 
 The `DrupalMultisiteAuthModule` looks for `key` attributes on each connection element, which must match the `key` obtained from the HTTP request in our `ca.upei.roblib.fedora.servletfilter.jaas.AuthFilterJAAS` implementation (by default, the `User-Agent` header because it is easily modified for requests from Tuque; configurable to other headers using the `keyHeader` property in the Spring bean configuration).
+
+See [the documentation](/docs/multisite.md) for more details.
