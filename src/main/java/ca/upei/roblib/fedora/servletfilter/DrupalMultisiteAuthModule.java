@@ -40,7 +40,7 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
         Document doc = getParsedConfig(getConfigPath().toFile());
         parseConfig(doc);
     }
-
+    
     protected void parseConfig(Document doc) {
         config.clear();
         @SuppressWarnings("unchecked")

@@ -127,7 +127,6 @@ public class AuthFilterJAAS extends UpstreamAuthFilterJAAS {
             this.key = key;
         }
 
-        @Override
         public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
             for (Callback c: callbacks) {
                 if (c instanceof NameCallback) {

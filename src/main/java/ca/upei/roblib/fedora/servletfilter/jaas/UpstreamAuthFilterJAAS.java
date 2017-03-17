@@ -141,7 +141,6 @@ implements Filter {
         filterConfigBean.addInitParameter("roleAttributeNames", names);
     }
 
-    @Override
     public void init(FilterConfig config) throws ServletException {
         this.filterConfig = config;
         if (this.filterConfig == null) {
@@ -242,7 +241,6 @@ implements Filter {
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
      * javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
-    @Override
     public void doFilter(ServletRequest request,
             ServletResponse response,
             FilterChain chain) throws IOException,
@@ -338,7 +336,6 @@ implements Filter {
         }
     }
 
-    @Override
     public void destroy() {
         logger.info("destroying servlet filter: " + this.getClass().getName());
         filterConfig = null;
