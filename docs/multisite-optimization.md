@@ -85,7 +85,7 @@ In the above (shortened) example, the key would be "test_key".
 
 ## Client request headers
 
-There's no precise mechanism prescribed to set the header. Assuming the default `User-Agent` header is being manipulated, something like [`islandora_repository_connection_config`](https://github.com/discoverygarden/islandora_repository_connection_config) might be used on each site, or a custom implementation of the underlying `hook_islandora_repository_connection_construction_alter()`.
+There's no precise mechanism prescribed to set the header. Assuming the default header of `User-Agent` is being manipulated, something like [`islandora_repository_connection_config`](https://github.com/discoverygarden/islandora_repository_connection_config) might be used on each site, or a custom implementation of the underlying `hook_islandora_repository_connection_construction_alter()`.
 
 While the ability to extract the key from other headers has been allowed in the LoginModule, the exact mechanism which might be use to inject arbitrary headers has not been examined in any great amount.
 
