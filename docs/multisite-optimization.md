@@ -4,8 +4,8 @@ There are a number of moving parts:
 
 * JAAS implementation to acquire additional context (the header)
 * LoginModule implementation to _use_ the additional context
-* Connection configuration in the LoginModule
-* Header configuration from clients
+* Connection configuration in the LoginModule (to inform the use of the context)
+* Header configuration from clients (the context provided from the client)
 
 A few definitions, just for ease of discussion:
 
