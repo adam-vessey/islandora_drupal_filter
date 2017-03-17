@@ -21,7 +21,7 @@ public class DrupalMultisiteAuthModuleTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        mockInstance = new DrupalMultisiteAuthModuleMock(KEY);
+        mockInstance = new DrupalMultisiteAuthModuleMock();
         mockInstance.initialize(new Subject(), new MockHandler(), new HashMap(), new HashMap());
     }
 
@@ -42,7 +42,7 @@ public class DrupalMultisiteAuthModuleTest extends TestCase {
         users.put("charlie", "third");
 
         for (String key: users.keySet()) {
-            mockInstance = new DrupalMultisiteAuthModuleMock(KEY);
+            mockInstance = new DrupalMultisiteAuthModuleMock();
             mockInstance.initialize(new Subject(), new MockHandler(), new HashMap(), new HashMap());
             mockInstance.findUser(key, users.get(key), KEY);
             mockInstance.attributeValues.contains("authenticated user");
