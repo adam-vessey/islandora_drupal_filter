@@ -8,7 +8,7 @@
 
     <properties>
         <skipTests>true</skipTests>
-        <fedora.version>3.8.1</fedora.version>
+        <fedora.version>3.6.2</fedora.version>
     </properties>
 
     <build>
