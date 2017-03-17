@@ -89,7 +89,9 @@ public class DrupalAuthModule implements LoginModule {
     protected boolean successLogin = false;
 
     @Override
-    public void initialize(Subject subject, CallbackHandler handler, Map<String, ?> sharedState,
+    public void initialize(Subject subject,
+            CallbackHandler handler,
+            Map<String, ?> sharedState,
             Map<String, ?> options) {
         this.subject = subject;
         this.handler = handler;
@@ -108,7 +110,6 @@ public class DrupalAuthModule implements LoginModule {
         }
     }
 
-    @Override
     public boolean login() throws LoginException {
         if (debug) {
             logger.debug("DrupalAuthModule login called.");
@@ -143,7 +144,6 @@ public class DrupalAuthModule implements LoginModule {
         return successLogin;
     }
 
-    @Override
     public boolean commit() throws LoginException {
         if (!successLogin) {
             return false;
@@ -168,7 +168,6 @@ public class DrupalAuthModule implements LoginModule {
         return true;
     }
 
-    @Override
     public boolean abort() throws LoginException {
         try {
             subject.getPrincipals().clear();
@@ -184,7 +183,6 @@ public class DrupalAuthModule implements LoginModule {
         return true;
     }
 
-    @Override
     public boolean logout() throws LoginException {
         try {
             subject.getPrincipals().clear();

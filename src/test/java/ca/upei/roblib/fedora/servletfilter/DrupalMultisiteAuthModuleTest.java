@@ -17,6 +17,9 @@ public class DrupalMultisiteAuthModuleTest extends TestCase {
     protected DrupalMultisiteAuthModule mockInstance;
     protected final String KEY = "test_key";
 
+    @SuppressWarnings({
+        "unchecked", "rawtypes"
+    })
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -35,6 +38,9 @@ public class DrupalMultisiteAuthModuleTest extends TestCase {
         assertTrue("Anonymous gets the anonymous role", mockInstance.attributeValues.contains(DrupalAuthModule.ANONYMOUSROLE));
     }
 
+    @SuppressWarnings({
+        "rawtypes", "unchecked"
+    })
     public void testFindUserAuthenticatedUser() throws IOException, DocumentException {
         Map<String,String> users = new HashMap<String, String>();
         users.put("alpha", "first");
@@ -75,7 +81,6 @@ public class DrupalMultisiteAuthModuleTest extends TestCase {
     }
 
     private class MockHandler implements CallbackHandler {
-        @Override
         public void handle(Callback[] callbacks) throws IOException,
         UnsupportedCallbackException {
             // No-op

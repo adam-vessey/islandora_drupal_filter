@@ -4,13 +4,10 @@
  */
 package ca.upei.roblib.fedora.servletfilter;
 
-//import fedora.common.Constants;
-import org.fcrepo.common.Constants;
 import java.io.File;
-import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -19,10 +16,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+//import fedora.common.Constants;
+import org.fcrepo.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +30,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author ppound based on fedora xmluserinfo from Fedora commons
  */
+@SuppressWarnings({
+    "unchecked", "rawtypes", "unused"
+})
 class DrupalUserInfo {
 
     protected static Logger log = LoggerFactory.getLogger(DrupalUserInfo.class);

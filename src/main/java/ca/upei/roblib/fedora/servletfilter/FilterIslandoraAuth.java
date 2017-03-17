@@ -1,7 +1,5 @@
 package ca.upei.roblib.fedora.servletfilter;
 
-import ca.upei.roblib.fedora.servletfilter.DrupalUserInfo;
-import ca.upei.roblib.fedora.servletfilter.FilterDrupal;
 import java.io.File;
 import java.security.Principal;
 import java.util.Arrays;
@@ -12,25 +10,25 @@ import java.util.Set;
 
 import javax.servlet.FilterConfig;
 
+import org.apache.commons.codec.binary.Base64;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.fcrepo.common.Constants;
-
 import org.fcrepo.server.security.servletfilters.BaseCaching;
 import org.fcrepo.server.security.servletfilters.Cache;
 import org.fcrepo.server.security.servletfilters.CacheElement;
 import org.fcrepo.server.security.servletfilters.ExtendedHttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * filter used exclusively for djatoka with api-a locked down. for use in non
  * fesl base sites. configured in web.xml
  */
-
+@SuppressWarnings({
+    "unchecked", "deprecation"
+})
 public class FilterIslandoraAuth extends BaseCaching {
     private static final String PARAMETER_NAME_UID = "uid";
     private static final Credentials DJATOKA_CREDENTIALS = new Credentials("djatoka", "djatoka");

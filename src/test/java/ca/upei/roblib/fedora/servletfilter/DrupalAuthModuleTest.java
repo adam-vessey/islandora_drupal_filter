@@ -14,6 +14,10 @@ import junit.framework.TestCase;
 public class DrupalAuthModuleTest extends TestCase {
     protected DrupalAuthModuleMock mockInstance;
 
+    @Override
+    @SuppressWarnings({
+        "unchecked", "rawtypes"
+    })
     public void setUp() throws Exception {
         super.setUp();
 
@@ -33,6 +37,9 @@ public class DrupalAuthModuleTest extends TestCase {
                 mockInstance.attributeValues.contains(DrupalAuthModule.ANONYMOUSROLE));
     }
 
+    @SuppressWarnings({
+        "rawtypes", "unchecked"
+    })
     public void testFindUserAuthenticatedUser() {
         Map<String, String> users = new HashMap<String, String>();
         users.put("alpha", "first");

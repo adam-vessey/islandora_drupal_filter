@@ -12,20 +12,24 @@
 
 package ca.upei.roblib.fedora.servletfilter;
 
+import java.util.Map;
+
 //import fedora.common.Constants;
 import org.fcrepo.common.Constants;
 //import fedora.server.security.servletfilters.BaseCaching;
 import org.fcrepo.server.security.servletfilters.BaseCaching;
 //import fedora.server.security.servletfilters.CacheElement;
 import org.fcrepo.server.security.servletfilters.CacheElement;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  * @author ppound
  */
+@SuppressWarnings({
+        "unchecked", "rawtypes"
+})
 public class FilterDrupal extends BaseCaching implements Constants {
     protected static Logger log = LoggerFactory.getLogger(FilterDrupal.class);
 
