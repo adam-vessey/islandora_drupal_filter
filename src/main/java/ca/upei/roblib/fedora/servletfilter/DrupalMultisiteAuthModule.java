@@ -26,6 +26,7 @@ import ca.upei.roblib.fedora.servletfilter.jaas.KeyChoiceCallback;
 import ca.upei.roblib.fedora.servletfilter.jaas.MissingCredsException;
 
 public class DrupalMultisiteAuthModule extends DrupalAuthModule {
+    public static final String SUBJECT_ATTRIBUTE_NAME = "islandora-agent";
     protected Map<String, Map<String, String>> config;
 
     public DrupalMultisiteAuthModule() throws IOException, DocumentException {
@@ -97,7 +98,7 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
     protected void setAgentsSet(String agent) {
         Set<String> agents = new HashSet<String>();
         agents.add(agent);
-        attributes.put("agent", agents);
+        attributes.put(SUBJECT_ATTRIBUTE_NAME, agents);
     }
 
     /**
