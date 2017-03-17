@@ -1,8 +1,6 @@
 package ca.upei.roblib.fedora.servletfilter;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,7 +21,6 @@ import javax.security.auth.login.LoginException;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.fcrepo.common.Constants;
 
 import ca.upei.roblib.fedora.servletfilter.jaas.KeyChoiceCallback;
 import ca.upei.roblib.fedora.servletfilter.jaas.MissingCredsException;
@@ -37,10 +34,10 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
     }
 
     protected void parseConfig() throws DocumentException, IOException {
-        Document doc = getParsedConfig(getConfigPath().toFile());
+        Document doc = getParsedConfig();
         parseConfig(doc);
     }
-    
+
     protected void parseConfig(Document doc) {
         config.clear();
         @SuppressWarnings("unchecked")
@@ -177,14 +174,5 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
         }
 
         attributes.put("role", attributeValues);
-    }
-
-    protected static Path getConfigPath() {
-        String fedoraHome = Constants.FEDORA_HOME;
-        if (fedoraHome == null) {
-            logger.warn("FEDORA_HOME not set; unable to initialize");
-        }
-
-        return FileSystems.getDefault().getPath(fedoraHome, "server/config/filter-drupal.xml");
     }
 }
