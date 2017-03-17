@@ -42,6 +42,7 @@
                 <directory>src/test/resources</directory>
                 <includes>
                     <include>filter-drupal.xml</include>
+                    <include>filter-drupal-multisite.xml</include>
                 </includes>
             </testResource>
         </testResources>
