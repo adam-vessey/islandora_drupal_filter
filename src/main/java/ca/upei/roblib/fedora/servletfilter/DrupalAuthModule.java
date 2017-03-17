@@ -14,7 +14,7 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-*
+ *
 fedora-auth
 {
         org.fcrepo.server.security.jaas.auth.module.XmlUsersFileModule required
@@ -30,23 +30,19 @@ fedora-auth
 
 package ca.upei.roblib.fedora.servletfilter;
 
-import org.fcrepo.common.Constants;
-
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.File;
 import java.io.InputStream;
-
-import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import java.util.Iterator;
-import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,19 +55,19 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
-import org.fcrepo.server.security.jaas.auth.UserPrincipal;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.fcrepo.common.Constants;
+import org.fcrepo.server.security.jaas.auth.UserPrincipal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DrupalAuthModule implements LoginModule {
 
-    protected static final Logger logger = LoggerFactory.getLogger(DrupalAuthModule.class);
+    protected static final Logger logger =
+            LoggerFactory.getLogger(DrupalAuthModule.class);
 
     protected Subject subject = null;
 
@@ -92,6 +88,7 @@ public class DrupalAuthModule implements LoginModule {
 
     protected boolean successLogin = false;
 
+    @Override
     public void initialize(Subject subject, CallbackHandler handler, Map<String, ?> sharedState,
             Map<String, ?> options) {
         this.subject = subject;
@@ -111,6 +108,7 @@ public class DrupalAuthModule implements LoginModule {
         }
     }
 
+    @Override
     public boolean login() throws LoginException {
         if (debug) {
             logger.debug("DrupalAuthModule login called.");
@@ -145,6 +143,7 @@ public class DrupalAuthModule implements LoginModule {
         return successLogin;
     }
 
+    @Override
     public boolean commit() throws LoginException {
         if (!successLogin) {
             return false;
@@ -169,6 +168,7 @@ public class DrupalAuthModule implements LoginModule {
         return true;
     }
 
+    @Override
     public boolean abort() throws LoginException {
         try {
             subject.getPrincipals().clear();
@@ -184,6 +184,7 @@ public class DrupalAuthModule implements LoginModule {
         return true;
     }
 
+    @Override
     public boolean logout() throws LoginException {
         try {
             subject.getPrincipals().clear();
@@ -211,8 +212,8 @@ public class DrupalAuthModule implements LoginModule {
      * @param jdbcURLProtocol
      * @return
      */
-    protected Connection connectToDB(String server, String database, String user, String pass, String port,
-            String jdbcDriverClass, String jdbcURLProtocol) {
+    @Deprecated
+    protected Connection connectToDB(String server, String database, String user, String pass, String port, String jdbcDriverClass, String jdbcURLProtocol) {
         HashMap<String, String> settings = new HashMap<String, String>();
         settings.put("server", server);
         settings.put("database", database);
@@ -266,7 +267,7 @@ public class DrupalAuthModule implements LoginModule {
 
     /**
      * Get an InputStream containing the config XML.
-     * 
+     *
      * @return
      * @throws IOException
      */
@@ -282,7 +283,7 @@ public class DrupalAuthModule implements LoginModule {
 
     /**
      * Get the parsed XML.
-     * 
+     *
      * @return
      * @throws DocumentException
      * @throws IOException
@@ -297,7 +298,7 @@ public class DrupalAuthModule implements LoginModule {
 
     protected Document getParsedConfig(InputStream stream) throws DocumentException, IOException {
         SAXReader reader = new SAXReader();
-        Document document = reader.read(getConfig());
+        Document document = reader.read(stream);
         return document;
     }
 
@@ -308,6 +309,7 @@ public class DrupalAuthModule implements LoginModule {
      * @return
      * @throws DocumentException
      */
+    @Deprecated
     public Document parse(File file) throws DocumentException {
         SAXReader reader = new SAXReader();
         Document document = reader.read(file);
@@ -330,7 +332,7 @@ public class DrupalAuthModule implements LoginModule {
     }
 
     /**
-     * 
+     *
      * @param userid
      * @param password
      */

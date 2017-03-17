@@ -14,7 +14,7 @@ import org.dom4j.DocumentException;
 import junit.framework.TestCase;
 
 public class DrupalMultisiteAuthModuleTest extends TestCase {
-    protected DrupalMultisiteAuthModuleMock mockInstance;
+    protected DrupalMultisiteAuthModule mockInstance;
     protected final String KEY = "test_key";
 
     @Override
