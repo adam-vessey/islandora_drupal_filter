@@ -42,9 +42,9 @@ public class DrupalMultisiteAuthModuleTest extends TestCase {
         users.put("charlie", "third");
 
         for (String key: users.keySet()) {
-            mockInstance = new DrupalMultisiteAuthModuleMock(key);
+            mockInstance = new DrupalMultisiteAuthModuleMock(KEY);
             mockInstance.initialize(new Subject(), new MockHandler(), new HashMap(), new HashMap());
-            mockInstance.findUser(key, users.get(key), key);
+            mockInstance.findUser(key, users.get(key), KEY);
             mockInstance.attributeValues.contains("authenticated user");
         }
     }

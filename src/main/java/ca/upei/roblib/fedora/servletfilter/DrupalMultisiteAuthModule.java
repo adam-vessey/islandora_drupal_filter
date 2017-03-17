@@ -37,9 +37,12 @@ public class DrupalMultisiteAuthModule extends DrupalAuthModule {
     }
 
     protected void parseConfig() throws DocumentException, IOException {
-        config.clear();
         Document doc = getParsedConfig(getConfigPath().toFile());
+        parseConfig(doc);
+    }
 
+    protected void parseConfig(Document doc) {
+        config.clear();
         @SuppressWarnings("unchecked")
         List<Element> list = doc.selectNodes("//FilterDrupal_Connection/connection[@key]");
         for (Element el : list) {
