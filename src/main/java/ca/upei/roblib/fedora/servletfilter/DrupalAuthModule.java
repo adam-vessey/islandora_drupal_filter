@@ -69,12 +69,9 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+public class DrupalAuthModule implements LoginModule {
 
-public class DrupalAuthModule
-        implements LoginModule {
-
-    protected static final Logger logger =
-            LoggerFactory.getLogger(DrupalAuthModule.class);
+    protected static final Logger logger = LoggerFactory.getLogger(DrupalAuthModule.class);
 
     protected Subject subject = null;
 
@@ -85,7 +82,7 @@ public class DrupalAuthModule
     protected Map<String, ?> options = null;
 
     protected String username = null;
-    
+
     protected Set<String> attributeValues = null;
     protected Map<String, Set<String>> attributes = null;
 
@@ -95,10 +92,8 @@ public class DrupalAuthModule
 
     protected boolean successLogin = false;
 
-    public void initialize(Subject subject,
-                           CallbackHandler handler,
-                           Map<String, ?> sharedState,
-                           Map<String, ?> options) {
+    public void initialize(Subject subject, CallbackHandler handler, Map<String, ?> sharedState,
+            Map<String, ?> options) {
         this.subject = subject;
         this.handler = handler;
         this.sharedState = sharedState;
@@ -132,19 +127,19 @@ public class DrupalAuthModule
         try {
             handler.handle(callbacks);
             username = ((NameCallback) callbacks[0]).getName();
-            char[] passwordCharArray =
-                    ((PasswordCallback) callbacks[1]).getPassword();
+            char[] passwordCharArray = ((PasswordCallback) callbacks[1]).getPassword();
             String password = new String(passwordCharArray);
 
-	        findUser(username, password);
+            findUser(username, password);
 
-        } catch (IOException ioe) {
+        }
+        catch (IOException ioe) {
             ioe.printStackTrace();
             throw new LoginException("IOException occured: " + ioe.getMessage());
-        } catch (UnsupportedCallbackException ucbe) {
+        }
+        catch (UnsupportedCallbackException ucbe) {
             ucbe.printStackTrace();
-            throw new LoginException("UnsupportedCallbackException encountered: "
-                    + ucbe.getMessage());
+            throw new LoginException("UnsupportedCallbackException encountered: " + ucbe.getMessage());
         }
 
         return successLogin;
@@ -165,7 +160,8 @@ public class DrupalAuthModule
 
             subject.getPrincipals().add(p);
             subject.getPublicCredentials().add(attributes);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.error(e.getMessage(), e);
             return false;
         }
@@ -179,7 +175,8 @@ public class DrupalAuthModule
             subject.getPublicCredentials().clear();
             subject.getPrivateCredentials().clear();
             username = null;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.error(e.getMessage(), e);
             return false;
         }
@@ -193,7 +190,8 @@ public class DrupalAuthModule
             subject.getPublicCredentials().clear();
             subject.getPrivateCredentials().clear();
             username = null;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.error(e.getMessage(), e);
             return false;
         }
@@ -202,8 +200,8 @@ public class DrupalAuthModule
     }
 
     /**
-     * @deprecated
-     *   Use separate function to parse connection XML element to a Map<String, String>.
+     * @deprecated Use separate function to parse connection XML element to a
+     *             Map<String, String>.
      * @param server
      * @param database
      * @param user
@@ -213,46 +211,49 @@ public class DrupalAuthModule
      * @param jdbcURLProtocol
      * @return
      */
-    protected Connection connectToDB(String server, String database, String user, String pass, String port, String jdbcDriverClass, String jdbcURLProtocol) {
-    	HashMap<String, String> settings = new HashMap<String, String>();
-    	settings.put("server", server);
-    	settings.put("database", database);
-    	settings.put("user", user);
-    	settings.put("pass", pass);
-    	settings.put("port", server);
-    	settings.put("jdbcDriverClass", jdbcDriverClass);
-    	settings.put("jdbcURLProtocol", jdbcURLProtocol);
-    	return connectToDB(settings);
+    protected Connection connectToDB(String server, String database, String user, String pass, String port,
+            String jdbcDriverClass, String jdbcURLProtocol) {
+        HashMap<String, String> settings = new HashMap<String, String>();
+        settings.put("server", server);
+        settings.put("database", database);
+        settings.put("user", user);
+        settings.put("pass", pass);
+        settings.put("port", server);
+        settings.put("jdbcDriverClass", jdbcDriverClass);
+        settings.put("jdbcURLProtocol", jdbcURLProtocol);
+        return connectToDB(settings);
     }
+
     protected Connection connectToDB(Map<String, String> settings) {
-        //assuming all drupal installs use mysql as the db.
+        // assuming all drupal installs use mysql as the db.
         Connection conn = null;
         if (settings.get("port") == null) {
-          settings.put("port", "3306");
+            settings.put("port", "3306");
         }
-        
+
         if (settings.get("jdbcDriverClass") == null) {
             settings.put("jdbcDriverClass", "com.mysql.jdbc.Driver");
         }
-        
+
         if (settings.get("jdbcURLProtocol") == null) {
             settings.put("jdbcURLProtocol", "jdbc:mysql");
         }
-        
-        String jdbcURL = settings.get("jdbcURLProtocol") + "://" +
-        	settings.get("server") + ":" + settings.get("port") + "/" +
-        	settings.get("database") + "?" + "user=" + settings.get("user") +
-        	"&password=" + settings.get("pass");
-        
+
+        String jdbcURL = settings.get("jdbcURLProtocol") + "://" + settings.get("server") + ":" + settings.get("port")
+                + "/" + settings.get("database") + "?" + "user=" + settings.get("user") + "&password="
+                + settings.get("pass");
+
         try {
             Class.forName(settings.get("jdbcDriverClass")).newInstance();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             logger.error("Exception: " + ex.getMessage());
         }
 
         try {
             conn = DriverManager.getConnection(jdbcURL);
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             // handle any errors
             logger.error("SQLException: " + ex.getMessage());
             logger.error("SQLState: " + ex.getSQLState());
@@ -275,10 +276,10 @@ public class DrupalAuthModule
             logger.warn("FEDORA_HOME not set; unable to initialize");
         }
 
-        File file =  new File(fedoraHome, "server/config/filter-drupal.xml");
+        File file = new File(fedoraHome, "server/config/filter-drupal.xml");
         return new FileInputStream(file);
     }
-    
+
     /**
      * Get the parsed XML.
      * 
@@ -287,20 +288,22 @@ public class DrupalAuthModule
      * @throws IOException
      */
     protected Document getParsedConfig() throws DocumentException, IOException {
-    	return getParsedConfig(getConfig());
-    }   
-    protected Document getParsedConfig(File file) throws DocumentException, IOException {
-    	return getParsedConfig(new FileInputStream(file));
+        return getParsedConfig(getConfig());
     }
+
+    protected Document getParsedConfig(File file) throws DocumentException, IOException {
+        return getParsedConfig(new FileInputStream(file));
+    }
+
     protected Document getParsedConfig(InputStream stream) throws DocumentException, IOException {
-    	SAXReader reader = new SAXReader();
+        SAXReader reader = new SAXReader();
         Document document = reader.read(getConfig());
         return document;
     }
-    
+
     /**
-     * @deprecated
-     *   This is only still here because it was public... Just in case.
+     * @deprecated This is only still here because it was public... Just in
+     *             case.
      * @param file
      * @return
      * @throws DocumentException
@@ -310,9 +313,9 @@ public class DrupalAuthModule
         Document document = reader.read(file);
         return document;
     }
-    
+
     protected Map<String, String> parseConnectionElement(Element connection) {
-    	Map<String, String> toReturn = new HashMap<String, String>();
+        Map<String, String> toReturn = new HashMap<String, String>();
         toReturn.put("server", connection.attributeValue("server"));
         toReturn.put("database", connection.attributeValue("dbname"));
         toReturn.put("user", connection.attributeValue("user"));
@@ -322,7 +325,7 @@ public class DrupalAuthModule
         toReturn.put("jdbcURLProtocol", connection.attributeValue("jdbcURLProtocol"));
         Element sqlElement = connection.element("sql");
         toReturn.put("sql", sqlElement.getTextTrim());
-        
+
         return toReturn;
     }
 
@@ -332,9 +335,10 @@ public class DrupalAuthModule
      * @param password
      */
     protected void findUser(String userid, String password) {
-    	logger.info("login module findUser");
+        logger.info("login module findUser");
 
-        // If the user is anonymous don't check the database just give the anonymous role.
+        // If the user is anonymous don't check the database just give the
+        // anonymous role.
         if ("anonymous".equals(userid) && "anonymous".equals(password)) {
             createAnonymousUser();
             return;
@@ -342,28 +346,31 @@ public class DrupalAuthModule
 
         Document filterDoc = null;
         try {
-        	filterDoc = getParsedConfig();
+            filterDoc = getParsedConfig();
         }
         catch (DocumentException e) {
-        	logger.error("Failed to parse the configuration XML.");
-        	return;
+            logger.error("Failed to parse the configuration XML.");
+            return;
         }
         catch (IOException e) {
-        	logger.error("Failed to load the configuration XML.");
-        	return;
+            logger.error("Failed to load the configuration XML.");
+            return;
         }
-        
+
         @SuppressWarnings("unchecked")
-		List<Element> list = filterDoc.selectNodes("//FilterDrupal_Connection/connection");
+        List<Element> list = filterDoc.selectNodes("//FilterDrupal_Connection/connection");
         Iterator<Element> iter = list.iterator();
 
         while (iter.hasNext()) {
             try {
-            	Map<String, String> parsed = parseConnectionElement(iter.next());
-                
-                //we may want to implement a connection pool or something here if performance gets to be
-                //an issue.  on the plus side mysql connections are fairly lightweight compared to postgres
-                //and the database only gets hit once per user session so we may be ok.
+                Map<String, String> parsed = parseConnectionElement(iter.next());
+
+                // we may want to implement a connection pool or something here
+                // if performance gets to be
+                // an issue. on the plus side mysql connections are fairly
+                // lightweight compared to postgres
+                // and the database only gets hit once per user session so we
+                // may be ok.
                 Connection conn = connectToDB(parsed);
                 if (conn != null) {
                     PreparedStatement pstmt = conn.prepareStatement(parsed.get("sql"));
@@ -376,11 +383,14 @@ public class DrupalAuthModule
                         int numericId = rs.getInt("userid");
                         attributeValues = new HashSet<String>();
                         if (numericId == 0) {
-                            // Add the role anonymous in case user in drupal is not associated with any Drupal roles.
+                            // Add the role anonymous in case user in drupal is
+                            // not associated with any Drupal roles.
                             attributeValues.add(DrupalAuthModule.ANONYMOUSROLE);
-                            // XXX: Maintain old "anonymous" role, in case it it is actually being used.
+                            // XXX: Maintain old "anonymous" role, in case it it
+                            // is actually being used.
                             attributeValues.add("anonymous");
-                        } else if (numericId == 1) {
+                        }
+                        else if (numericId == 1) {
                             attributeValues.add("administrator");
                         }
                         if (numericId > 0) {
@@ -398,12 +408,13 @@ public class DrupalAuthModule
                     }
                     conn.close();
                 }
-            } catch (SQLException ex) {
-                logger.error("Error retrieving user info "+ex.getMessage());
+            }
+            catch (SQLException ex) {
+                logger.error("Error retrieving user info " + ex.getMessage());
             }
         }
 
-	  attributes.put("role", attributeValues);
+        attributes.put("role", attributeValues);
     }
 
     /**
@@ -412,9 +423,11 @@ public class DrupalAuthModule
     protected void createAnonymousUser() {
         this.username = "anonymous";
         attributeValues = new HashSet<String>();
-        // Add the role anonymous in case user in drupal is not associated with any Drupal roles.
+        // Add the role anonymous in case user in drupal is not associated with
+        // any Drupal roles.
         attributeValues.add(DrupalAuthModule.ANONYMOUSROLE);
-        // XXX: Maintain old "anonymous" role, in case it it is actually being used.
+        // XXX: Maintain old "anonymous" role, in case it it is actually being
+        // used.
         attributeValues.add("anonymous");
         attributes.put("role", attributeValues);
         successLogin = true;
