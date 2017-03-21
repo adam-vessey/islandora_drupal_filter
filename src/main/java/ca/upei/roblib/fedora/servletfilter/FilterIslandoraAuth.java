@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * fesl base sites. configured in web.xml
  */
 @SuppressWarnings({
-    "unchecked", "deprecation"
+        "unchecked", "deprecation"
 })
 public class FilterIslandoraAuth extends BaseCaching {
     private static final String PARAMETER_NAME_UID = "uid";

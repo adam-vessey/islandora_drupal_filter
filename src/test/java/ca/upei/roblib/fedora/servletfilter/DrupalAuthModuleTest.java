@@ -16,7 +16,7 @@ public class DrupalAuthModuleTest extends TestCase {
 
     @Override
     @SuppressWarnings({
-        "unchecked", "rawtypes"
+            "unchecked", "rawtypes"
     })
     public void setUp() throws Exception {
         super.setUp();
@@ -38,7 +38,7 @@ public class DrupalAuthModuleTest extends TestCase {
     }
 
     @SuppressWarnings({
-        "rawtypes", "unchecked"
+            "rawtypes", "unchecked"
     })
     public void testFindUserAuthenticatedUser() {
         Map<String, String> users = new HashMap<String, String>();

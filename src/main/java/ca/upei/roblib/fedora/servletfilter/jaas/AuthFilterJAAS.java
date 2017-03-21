@@ -128,14 +128,15 @@ public class AuthFilterJAAS extends UpstreamAuthFilterJAAS {
         }
 
         public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-            for (Callback c: callbacks) {
+            for (Callback c : callbacks) {
                 if (c instanceof NameCallback) {
                     ((NameCallback) c).setName(username);
-                } else if (c instanceof PasswordCallback) {
+                }
+                else if (c instanceof PasswordCallback) {
                     ((PasswordCallback) c).setPassword(password.toCharArray());
                 }
                 else if (c instanceof KeyChoiceCallback) {
-                    KeyChoiceCallback kcc = (KeyChoiceCallback)c;
+                    KeyChoiceCallback kcc = (KeyChoiceCallback) c;
                     try {
                         int idx = kcc.lookupKey(key);
                         kcc.setSelectedIndex(idx);

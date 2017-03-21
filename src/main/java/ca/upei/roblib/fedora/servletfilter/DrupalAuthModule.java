@@ -66,8 +66,7 @@ import org.slf4j.LoggerFactory;
 
 public class DrupalAuthModule implements LoginModule {
 
-    protected static final Logger logger =
-            LoggerFactory.getLogger(DrupalAuthModule.class);
+    protected static final Logger logger = LoggerFactory.getLogger(DrupalAuthModule.class);
 
     protected Subject subject = null;
 
@@ -89,9 +88,7 @@ public class DrupalAuthModule implements LoginModule {
     protected boolean successLogin = false;
 
     @Override
-    public void initialize(Subject subject,
-            CallbackHandler handler,
-            Map<String, ?> sharedState,
+    public void initialize(Subject subject, CallbackHandler handler, Map<String, ?> sharedState,
             Map<String, ?> options) {
         this.subject = subject;
         this.handler = handler;
@@ -211,7 +208,8 @@ public class DrupalAuthModule implements LoginModule {
      * @return
      */
     @Deprecated
-    protected Connection connectToDB(String server, String database, String user, String pass, String port, String jdbcDriverClass, String jdbcURLProtocol) {
+    protected Connection connectToDB(String server, String database, String user, String pass, String port,
+            String jdbcDriverClass, String jdbcURLProtocol) {
         HashMap<String, String> settings = new HashMap<String, String>();
         settings.put("server", server);
         settings.put("database", database);

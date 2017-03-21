@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * @author ppound based on fedora xmluserinfo from Fedora commons
  */
 @SuppressWarnings({
-    "unchecked", "rawtypes", "unused"
+        "unchecked", "rawtypes", "unused"
 })
 class DrupalUserInfo {
 
