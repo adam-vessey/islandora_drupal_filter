@@ -67,7 +67,8 @@ public class FilterDrupal extends BaseCaching implements Constants {
             parser.findUser(cacheElement.getUserid(), password);
             log.debug("back from databaseQuery");
 
-        } catch (Throwable th) {
+        }
+        catch (Throwable th) {
             String msg = "error quering database";
             // showThrowable(th, log, msg);
             log.error(msg);
@@ -81,8 +82,7 @@ public class FilterDrupal extends BaseCaching implements Constants {
         log.debug(format(method, null, "namedAttributes"));
         log.debug(namedAttributes.toString());
         log.debug(format(method, null, "errorMessage", errorMessage));
-        cacheElement.populate(authenticated, null, namedAttributes,
-                errorMessage);
+        cacheElement.populate(authenticated, null, namedAttributes, errorMessage);
         log.debug(exit(method));
     }
 }

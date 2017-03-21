@@ -28,8 +28,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author ppound
- * based on fedora xmluserinfo from Fedora commons
+ * @author ppound based on fedora xmluserinfo from Fedora commons
  */
 @SuppressWarnings({
     "unchecked", "rawtypes", "unused"
@@ -46,24 +45,25 @@ class DrupalUserInfo {
     private final static String ANONYMOUSROLE = "anonymous";
 
     private Connection connectToDB(String server, String database, String user, String pass, String port) {
-        //assuming all drupal installs use mysql as the db.
+        // assuming all drupal installs use mysql as the db.
         if (port == null) {
             port = "3306";
         }
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             log.error("Exception: " + ex.getMessage());
 
         }
 
         try {
-            conn =
-                    DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database + "?" +
-                            "user=" + user + "&password=" + pass);
+            conn = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database + "?" + "user="
+                    + user + "&password=" + pass);
 
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             // handle any errors
             log.error("SQLException: " + ex.getMessage());
             log.error("SQLState: " + ex.getSQLState());
@@ -82,12 +82,15 @@ class DrupalUserInfo {
 
     void findUser(String userid, String password) {
         String server, database, user, pass, port, sql;
-        //we may want to implement a connection pool or something here if performance gets to be
-        //an issue.  on the plus side mysql connections are fairly lightweight compared to postgres
-        //and the database only gets hit once per user session so we may be ok.
+        // we may want to implement a connection pool or something here if
+        // performance gets to be
+        // an issue. on the plus side mysql connections are fairly lightweight
+        // compared to postgres
+        // and the database only gets hit once per user session so we may be ok.
         File drupalConnectionInfo = null;
         namedAttributes = new Hashtable();
-        //if the user is anonymous don't check the database just give the anonymous role
+        // if the user is anonymous don't check the database just give the
+        // anonymous role
         if ("anonymous".equals(userid) && "anonymous".equals(password)) {
             createAnonymousUser();
             return;
@@ -95,7 +98,8 @@ class DrupalUserInfo {
         String fedoraHome = Constants.FEDORA_HOME;
         if (fedoraHome == null) {
             log.warn("FEDORA_HOME not set; unable to initialize");
-        } else {
+        }
+        else {
             drupalConnectionInfo = new File(fedoraHome, "server/config/filter-drupal.xml");
         }
         if (drupalConnectionInfo == null) {
@@ -105,7 +109,8 @@ class DrupalUserInfo {
         Document filterDoc = null;
         try {
             filterDoc = parse(drupalConnectionInfo);
-        } catch (DocumentException ex) {
+        }
+        catch (DocumentException ex) {
             log.error("Could not parse Drupal Servlet Filter Config file.");
 
         }
@@ -135,10 +140,18 @@ class DrupalUserInfo {
                         this.password = password;
                         attributeValues = new HashSet();
                         if (numericId == 0) {
-                            attributeValues.add("anonymous");//add the role anonymous in case user in drupal is not associated with any Drupal roles.
-                        } else if (numericId == 1) {
+                            attributeValues.add("anonymous");// add the role
+                                                             // anonymous in
+                                                             // case user in
+                                                             // drupal is not
+                                                             // associated with
+                                                             // any Drupal
+                                                             // roles.
+                        }
+                        else if (numericId == 1) {
                             attributeValues.add("administrator");
-                        } else {
+                        }
+                        else {
                             attributeValues.add("authenticated user");
                         }
                         authenticated = true;
@@ -153,8 +166,9 @@ class DrupalUserInfo {
                     }
                     conn.close();
                 }
-            } catch (SQLException ex) {
-                log.error("Error retrieving user info "+ex.getMessage());
+            }
+            catch (SQLException ex) {
+                log.error("Error retrieving user info " + ex.getMessage());
             }
 
         }
@@ -162,8 +176,6 @@ class DrupalUserInfo {
         if (attributeValues != null) {
             namedAttributes.put("fedoraRole", attributeValues);
         }
-
-
 
     }
 
@@ -179,7 +191,11 @@ class DrupalUserInfo {
         this.username = "anonymous";
         this.password = "anonymous";
         attributeValues = new HashSet();
-        attributeValues.add(DrupalUserInfo.ANONYMOUSROLE);//add the role anonymous in case user in drupal is not associated with any Drupal roles.
+        attributeValues.add(DrupalUserInfo.ANONYMOUSROLE);// add the role
+                                                          // anonymous in case
+                                                          // user in drupal is
+                                                          // not associated with
+                                                          // any Drupal roles.
         namedAttributes.put("fedoraRole", attributeValues);
         authenticated = true;
 

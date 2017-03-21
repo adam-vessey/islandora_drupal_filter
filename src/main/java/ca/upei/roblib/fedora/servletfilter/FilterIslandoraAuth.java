@@ -22,8 +22,9 @@ import org.fcrepo.server.security.servletfilters.ExtendedHttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**filter used exclusively for djatoka with api-a locked down.
- * for use in non fesl base sites.  configured in web.xml
+/**
+ * filter used exclusively for djatoka with api-a locked down. for use in non
+ * fesl base sites. configured in web.xml
  */
 @SuppressWarnings({
     "unchecked", "deprecation"
@@ -67,29 +68,26 @@ public class FilterIslandoraAuth extends BaseCaching {
         }
 
         catch (Exception e) {
-            //showThrowable(e, log, "error reading read config file");
+            // showThrowable(e, log, "error reading read config file");
             log.error("error reading config file " + e.getLocalizedMessage());
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void authenticate(
-            ExtendedHttpServletRequest extendedHttpServletRequest)
-                    throws Exception {
+    public void authenticate(ExtendedHttpServletRequest extendedHttpServletRequest) throws Exception {
         Credentials credentials = getCredentials(extendedHttpServletRequest);
-        //log.info("User: " + credentials.user + " Password : " + credentials.password);
+        // log.info("User: " + credentials.user + " Password : " +
+        // credentials.password);
         if (credentials != null) {
             Cache cache = getCache(FILTER_NAME);
 
             try {
-                Boolean result = cache.authenticate(this, credentials.user,
-                        credentials.password);
+                Boolean result = cache.authenticate(this, credentials.user, credentials.password);
                 if (result != null && result.booleanValue()) {
                     Principal authenticatingPrincipal = new org.fcrepo.server.security.servletfilters.Principal(
                             credentials.user);
-                    extendedHttpServletRequest.setAuthenticated(
-                            authenticatingPrincipal, FILTER_NAME);
+                    extendedHttpServletRequest.setAuthenticated(authenticatingPrincipal, FILTER_NAME);
                 }
 
                 cache.audit(credentials.user);
@@ -102,9 +100,8 @@ public class FilterIslandoraAuth extends BaseCaching {
     }
 
     @Override
-    public void contributeAuthenticatedAttributes(
-            ExtendedHttpServletRequest extendedHttpServletRequest)
-                    throws Exception {
+    public void contributeAuthenticatedAttributes(ExtendedHttpServletRequest extendedHttpServletRequest)
+            throws Exception {
         if (extendedHttpServletRequest.getUserPrincipal() != null) {
             Credentials c = getCredentials(extendedHttpServletRequest);
             contributeAttributes(extendedHttpServletRequest, c.user, c.password);
@@ -119,7 +116,7 @@ public class FilterIslandoraAuth extends BaseCaching {
         }
 
         else {
-            log.info("authenticating user request for: " + cacheElement.getUserid()  + " Password: " + password);
+            log.info("authenticating user request for: " + cacheElement.getUserid() + " Password: " + password);
             DrupalUserInfo parser = new DrupalUserInfo();
             log.info("User ID: " + cacheElement.getUserid());
             try {
@@ -127,12 +124,11 @@ public class FilterIslandoraAuth extends BaseCaching {
             }
 
             catch (Exception e) {
-                //showThrowable(e, log, "error querying database");
-                log.error("error querying database "+e.getLocalizedMessage());
+                // showThrowable(e, log, "error querying database");
+                log.error("error querying database " + e.getLocalizedMessage());
             }
 
-            cacheElement.populate(parser.getAuthenticated(), null, parser
-                    .getNamedAttributes(), null);
+            cacheElement.populate(parser.getAuthenticated(), null, parser.getNamedAttributes(), null);
         }
     }
 
@@ -142,8 +138,7 @@ public class FilterIslandoraAuth extends BaseCaching {
         cacheElement.populate(Boolean.TRUE, null, attributeMap, null);
     }
 
-    private Credentials getCredentials(
-            ExtendedHttpServletRequest extendedHttpServletRequest) {
+    private Credentials getCredentials(ExtendedHttpServletRequest extendedHttpServletRequest) {
         Credentials credentials = null;
 
         if (isDjatokaRequest(extendedHttpServletRequest)) {
@@ -169,22 +164,19 @@ public class FilterIslandoraAuth extends BaseCaching {
         return DJATOKA_CREDENTIALS.user.equals(user) && DJATOKA_CREDENTIALS.password.equals(password);
     }
 
-    private boolean isDjatokaRequest(
-            ExtendedHttpServletRequest extendedHttpServletRequest) {
+    private boolean isDjatokaRequest(ExtendedHttpServletRequest extendedHttpServletRequest) {
 
         boolean local = false, jp2 = false;
         try {
-            local = djatokaIPs.contains(extendedHttpServletRequest.getRemoteAddr())
-                    || (djatokaIPs.contains("local") && extendedHttpServletRequest
-                            .getRemoteAddr().equals(
-                                    extendedHttpServletRequest.getLocalAddr()));
+            local = djatokaIPs.contains(extendedHttpServletRequest.getRemoteAddr()) || (djatokaIPs.contains("local")
+                    && extendedHttpServletRequest.getRemoteAddr().equals(extendedHttpServletRequest.getLocalAddr()));
 
             jp2 = extendedHttpServletRequest.getRequestURI().matches(djatokaURIPattern);
         }
 
         catch (Exception e) {
-            //showThrowable(e, log, "error assessing service request");
-            log.error("error assessing service request "+e.getLocalizedMessage());
+            // showThrowable(e, log, "error assessing service request");
+            log.error("error assessing service request " + e.getLocalizedMessage());
         }
 
         return local && jp2;
