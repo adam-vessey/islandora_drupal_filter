@@ -12,7 +12,5 @@ public class MissingCredsException extends UnsupportedCallbackException {
 
     public MissingCredsException(Callback callback) {
         super(callback);
-        // TODO Auto-generated constructor stub
     }
-
 }
