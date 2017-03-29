@@ -85,6 +85,16 @@
             <artifactId>fcrepo-server</artifactId>
             <version>${fedora.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>woodstox</groupId>
+                    <artifactId>wstx-asl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.trippi</groupId>
+                    <artifactId>trippi-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -103,6 +113,12 @@
             <artifactId>postgresql</artifactId>
             <version>9.1-901.jdbc4</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>wstx-asl</artifactId>
+            <version>3.0.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -162,13 +178,13 @@
                                     <goal>execute</goal>
                                 </goals>
                                 <configuration>
-                                    <!-- need another database to drop the 
+                                    <!-- need another database to drop the
                                         targeted one -->
                                     <url>${db.scheme}://${db.server}:${db.port}</url>
                                     <autocommit>true</autocommit>
                                     <sqlCommand>DROP DATABASE
                                         ${db.name};</sqlCommand>
-                                    <!-- ignore error when database is not 
+                                    <!-- ignore error when database is not
                                         avaiable -->
                                     <onError>continue</onError>
                                 </configuration>
