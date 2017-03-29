@@ -294,7 +294,7 @@ public class DrupalAuthModule
     }
     protected Document getParsedConfig(InputStream stream) throws DocumentException, IOException {
     	SAXReader reader = new SAXReader();
-        Document document = reader.read(getConfig());
+        Document document = reader.read(stream);
         return document;
     }
     
